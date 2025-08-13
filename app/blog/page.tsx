@@ -1,142 +1,69 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { SharedHeader } from "@/components/shared-header"
 import { SharedFooter } from "@/components/shared-footer"
-import { Search, Calendar, Clock, ArrowLeft, Tag } from "lucide-react"
+import { Search, Calendar, Clock, ArrowLeft, Tag, Filter } from "lucide-react"
 import Image from "next/image"
+import Link from "next/link"
+import { getBlogs, getBlogCategories, type BlogPost } from "@/lib/blog-service"
 
-const blogPosts = [
-  {
-    id: 1,
-    title: "كيف تحقق عائد استثمار 300% من حملاتك الإعلانية",
-    excerpt: "اكتشف الاستراتيجيات المتقدمة لتحسين ROAS وزيادة أرباحك من الإعلانات الرقمية مع منصة انطلاقة.",
-    image: "/blog-roas-success.png",
-    date: "2025-01-15",
-    readTime: "5 دقائق",
-    category: "تحسين الأداء",
-    featured: true,
-    slug: "roas-optimization-guide",
-  },
-  {
-    id: 2,
-    title: "دليل شامل لإعلانات المؤثرين في السعودية",
-    excerpt: "تعرف على أفضل الممارسات للتعاون مع المؤثرين وتحقيق أقصى استفادة من حملاتك التسويقية.",
-    image: "/blog-influencer-campaigns.png",
-    date: "2025-01-12",
-    readTime: "7 دقائق",
-    category: "إعلانات المؤثرين",
-    slug: "influencer-marketing-saudi",
-  },
-  {
-    id: 3,
-    title: "الذكاء الاصطناعي في الإعلانات: المستقبل هنا",
-    excerpt: "كيف تستخدم تقنيات الذكاء الاصطناعي لتحسين استهداف جمهورك وزيادة معدلات التحويل.",
-    image: "/blog-ai-advertising.png",
-    date: "2025-01-10",
-    readTime: "6 دقائق",
-    category: "تكنولوجيا",
-    slug: "ai-advertising-future",
-  },
-  {
-    id: 4,
-    title: "استراتيجيات التسويق عبر وسائل التواصل الاجتماعي",
-    excerpt: "أحدث الطرق للوصول إلى جمهورك المستهدف عبر منصات التواصل الاجتماعي المختلفة.",
-    image: "/blog-social-media-marketing.png",
-    date: "2025-01-08",
-    readTime: "4 دقائق",
-    category: "وسائل التواصل",
-    slug: "social-media-strategies",
-  },
-  {
-    id: 5,
-    title: "نمو التجارة الإلكترونية: قصص نجاح ملهمة",
-    excerpt: "تعرف على قصص نجاح حقيقية لمتاجر إلكترونية حققت نمواً استثنائياً باستخدام منصة انطلاقة.",
-    image: "/blog-ecommerce-growth.png",
-    date: "2025-01-05",
-    readTime: "8 دقائق",
-    category: "قصص نجاح",
-    slug: "ecommerce-success-stories",
-  },
-  {
-    id: 6,
-    title: "تحسين الحملات الإعلانية: دليل المبتدئين",
-    excerpt: "خطوات عملية لتحسين أداء حملاتك الإعلانية وتقليل تكلفة الاكتساب بشكل فعال.",
-    image: "/blog-campaign-optimization.png",
-    date: "2025-01-03",
-    readTime: "5 دقائق",
-    category: "تحسين الأداء",
-    slug: "campaign-optimization-guide",
-  },
-  {
-    id: 7,
-    title: "كيفية بناء استراتيجية محتوى فعالة للإعلانات",
-    excerpt: "تعلم كيفية إنشاء محتوى إعلاني جذاب يحقق أهدافك التسويقية ويزيد من تفاعل جمهورك.",
-    image: "/blog-content-strategy.png",
-    date: "2025-01-01",
-    readTime: "6 دقائق",
-    category: "استراتيجية المحتوى",
-    slug: "content-strategy-guide",
-  },
-  {
-    id: 8,
-    title: "تحليل المنافسين: الدليل الشامل للتفوق في السوق",
-    excerpt: "اكتشف كيفية تحليل منافسيك واستخدام هذه المعلومات لتطوير استراتيجيات إعلانية متفوقة.",
-    image: "/blog-competitor-analysis.png",
-    date: "2024-12-28",
-    readTime: "7 دقائق",
-    category: "تحليل السوق",
-    slug: "competitor-analysis-guide",
-  },
-  {
-    id: 9,
-    title: "الإعلانات المحلية: كيف تصل لعملائك في منطقتك",
-    excerpt: "استراتيجيات فعالة للإعلانات المحلية وكيفية استهداف العملاء في منطقتك الجغرافية بدقة.",
-    image: "/blog-local-advertising.png",
-    date: "2024-12-25",
-    readTime: "5 دقائق",
-    category: "إعلانات محلية",
-    slug: "local-advertising-strategies",
-  },
-  {
-    id: 10,
-    title: "مستقبل التسويق الرقمي في المملكة العربية السعودية",
-    excerpt: "نظرة على الاتجاهات الناشئة في التسويق الرقمي والفرص المتاحة في السوق السعودي.",
-    image: "/blog-digital-marketing-future.png",
-    date: "2024-12-22",
-    readTime: "8 دقائق",
-    category: "اتجاهات السوق",
-    slug: "digital-marketing-future-saudi",
-  },
+// Fallback blog posts in case API fails
+const fallbackBlogPosts = [
+ 
 ]
 
 const categories = [
-  "الكل",
-  "تحسين الأداء",
-  "إعلانات المؤثرين",
-  "تكنولوجيا",
-  "وسائل التواصل",
-  "قصص نجاح",
-  "استراتيجية المحتوى",
-  "تحليل السوق",
-  "إعلانات محلية",
-  "اتجاهات السوق",
+  
 ]
 
 export default function BlogPage() {
   const [searchTerm, setSearchTerm] = useState("")
   const [selectedCategory, setSelectedCategory] = useState("الكل")
+  const [blogPosts, setBlogPosts] = useState<BlogPost[]>(fallbackBlogPosts as unknown as BlogPost[])
+  const [blogCategories, setBlogCategories] = useState<string[]>(categories)
+  const [isLoading, setIsLoading] = useState(true)
+
+  // Fetch blogs and categories
+  useEffect(() => {
+    const fetchData = async () => {
+      setIsLoading(true)
+      try {
+        const response = await getBlogs(selectedCategory === "الكل" ? "" : selectedCategory)
+        setBlogPosts(response.blogs)
+        
+        // Fetch categories if needed
+        const categoryList = await getBlogCategories()
+        if (categoryList.length > 0) {
+          setBlogCategories(["الكل", ...categoryList])
+        }
+      } catch (error) {
+        console.error('Error fetching blog data:', error)
+        // Fallback data is already set as initial state
+      } finally {
+        setIsLoading(false)
+      }
+    }
+
+    fetchData()
+  }, [selectedCategory])
 
   const filteredPosts = blogPosts.filter((post) => {
-    const matchesSearch =
+    if (!post) return false;
+    
+    const matchesSearch = searchTerm ? (
       post.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
       post.excerpt.toLowerCase().includes(searchTerm.toLowerCase())
-    const matchesCategory = selectedCategory === "الكل" || post.category === selectedCategory
-    return matchesSearch && matchesCategory
+    ) : true;
+    
+    const matchesCategory = selectedCategory === "الكل" || post.category === selectedCategory;
+    return matchesSearch && matchesCategory;
   })
 
-  const featuredPost = blogPosts.find((post) => post.featured)
-  const regularPosts = filteredPosts.filter((post) => !post.featured)
+  // Use the first post as featured if available, otherwise null
+  const featuredPost = filteredPosts.length > 0 ? filteredPosts[0] : null
+  // All other posts are regular posts
+  const regularPosts = filteredPosts.length > 1 ? filteredPosts.slice(1) : []
 
   return (
     <div className="min-h-screen bg-black text-white" dir="rtl">
@@ -166,20 +93,21 @@ export default function BlogPage() {
                 className="w-full bg-gray-900 border border-gray-700 rounded-xl px-12 py-4 text-white placeholder-gray-400 focus:outline-none focus:border-teal-400 transition-colors"
               />
             </div>
-            <div className="flex gap-2 overflow-x-auto">
-              {categories.map((category) => (
-                <button
-                  key={category}
-                  onClick={() => setSelectedCategory(category)}
-                  className={`px-6 py-3 rounded-xl whitespace-nowrap transition-all ${
-                    selectedCategory === category
-                      ? "bg-teal-400 text-black font-semibold"
-                      : "bg-gray-800 text-gray-300 hover:bg-gray-700"
-                  }`}
+            <div className="relative min-w-[200px]">
+              <div className="flex items-center gap-2 bg-gray-900 border border-gray-700 rounded-xl py-4 px-6 text-white">
+                <Filter className="w-5 h-5 text-teal-400" />
+                <select 
+                  className="bg-transparent w-full focus:outline-none"
+                  value={selectedCategory}
+                  onChange={(e) => setSelectedCategory(e.target.value)}
                 >
-                  {category}
-                </button>
-              ))}
+                  {blogCategories.map((category, index) => (
+                    <option key={index} value={category} className="bg-gray-900 text-white">
+                      {category}
+                    </option>
+                  ))}
+                </select>
+              </div>
             </div>
           </div>
         </div>
@@ -195,7 +123,7 @@ export default function BlogPage() {
                 <div className="md:w-1/2">
                   <div className="relative h-64 md:h-full">
                     <Image
-                      src={featuredPost.image || "/placeholder.svg"}
+                      src={featuredPost.featuredImage?.url || "/placeholder.svg"}
                       alt={featuredPost.title}
                       fill
                       className="object-cover group-hover:scale-105 transition-transform duration-300"
@@ -209,11 +137,11 @@ export default function BlogPage() {
                   <div className="flex items-center gap-4 mb-4 text-sm text-gray-400">
                     <div className="flex items-center gap-2">
                       <Calendar className="w-4 h-4" />
-                      <span>{new Date(featuredPost.date).toLocaleDateString("ar-SA")}</span>
+                      <span>{new Date(featuredPost.publishedAt || featuredPost.createdAt).toLocaleDateString("ar-SA")}</span>
                     </div>
                     <div className="flex items-center gap-2">
                       <Clock className="w-4 h-4" />
-                      <span>{featuredPost.readTime}</span>
+                      <span>{featuredPost.readTime} دقائق</span>
                     </div>
                     <div className="flex items-center gap-2">
                       <Tag className="w-4 h-4" />
@@ -253,12 +181,12 @@ export default function BlogPage() {
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
               {regularPosts.map((post) => (
                 <article
-                  key={post.id}
+                  key={post._id || post.slug}
                   className="bg-gray-900 rounded-2xl overflow-hidden hover:shadow-2xl transition-all duration-300 group hover:transform hover:scale-105"
                 >
                   <div className="relative h-48">
                     <Image
-                      src={post.image || "/placeholder.svg"}
+                      src={post.featuredImage?.url || "/placeholder.svg"}
                       alt={post.title}
                       fill
                       className="object-cover group-hover:scale-110 transition-transform duration-300"

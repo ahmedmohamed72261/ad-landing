@@ -36,7 +36,7 @@ export default function LandingPage() {
       {/* Header */}
       <SharedHeader currentPage="الرئيسية" />
 
-      <main>
+       <main>
         {/* Hero */}
         <section className="relative flex min-h-[100vh] items-center justify-center overflow-hidden bg-gradient-to-br from-gray-950 via-gray-900 to-black">
           {/* Background effects */}

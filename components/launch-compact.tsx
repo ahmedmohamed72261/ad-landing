@@ -103,7 +103,7 @@ export default function LaunchCompact() {
           <div className="relative overflow-hidden rounded-xl">
             <div className="pointer-events-none absolute inset-0 opacity-[0.08] bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.6)_1px,transparent_1px)] bg-[size:18px_18px]" />
             <Image
-              src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-lgnyingPzv33j8RyW8a8yYdXbfurPm.png"
+              src="/antalaqa-line.jpg"
               alt="شريط المنصات: Gmail, Google Ads, Instagram, Meta، مشاركة، LinkedIn، YouTube، Reddit، Pinterest، X"
               width={1200}
               height={220}

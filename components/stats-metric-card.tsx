@@ -1,7 +1,7 @@
 "use client"
 
 import { motion } from "framer-motion"
-import { useCountUp } from "./use-count-up"
+import CounterAnimation from "./counter-animation"
 import type { LucideIcon } from "lucide-react"
 
 type StatsMetricCardProps = {
@@ -19,7 +19,6 @@ export default function StatsMetricCard({
   delay = 0,
   formatValue = (v) => v.toLocaleString("ar-EG"),
 }: StatsMetricCardProps) {
-  const animatedValue = useCountUp({ end: value, duration: 1200, delay: 100 + delay })
 
   return (
     <motion.div
@@ -32,7 +31,13 @@ export default function StatsMetricCard({
       <div className="mb-4 rounded-full bg-teal-500/20 p-3">
         <Icon className="h-8 w-8 text-teal-400" />
       </div>
-      <p className="mb-2 text-3xl md:text-4xl font-bold">{formatValue(animatedValue)}</p>
+      <CounterAnimation 
+        end={value} 
+        duration={1500} 
+        delay={100 + delay} 
+        formatValue={formatValue} 
+        className="mb-2 text-3xl md:text-4xl font-bold"
+      />
       <p className="text-sm md:text-base text-gray-300">{label}</p>
     </motion.div>
   )

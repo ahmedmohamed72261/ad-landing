@@ -46,12 +46,13 @@ export default function FooterBadges() {
             aria-label="وزارة التجارة"
             title="وزارة التجارة"
           >
-            <img
-              src="https://darbpay.com/wp-content/uploads/2025/01/Logo_Ministry_of_Commerce.svg_.png"
+            <Image
+              src="/images/moc-logo.png"
+              width={80}
+              height={32}
               alt="شعار وزارة التجارة"
-              width="40"
-              height="40"
-              className="block h-10 w-10 rounded-sm object-contain"
+                height="40"
+                className="block h-10 w-10 rounded-sm object-contain"
             />
           </a>
         </div>

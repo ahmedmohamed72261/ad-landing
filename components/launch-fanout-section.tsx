@@ -174,7 +174,7 @@ export default function LaunchFanoutSection() {
             >
               <div className="mx-auto w-full max-w-4xl rounded-2xl border border-white/10 bg-white/[0.03] p-3">
                 <Image
-                  src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-lgnyingPzv33j8RyW8a8yYdXbfurPm.png"
+                  src="/antalaqa-line.jpg"
                   alt="منصات النشر: جوجل، إنستغرام، فيسبوك، لينكدإن، يوتيوب، ريديت، بنترست، إكس وغيرها"
                   width={954}
                   height={170}

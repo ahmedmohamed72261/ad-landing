@@ -1,8 +1,18 @@
 import type React from "react"
-import type { Metadata } from "next"
+import type { Metadata, Viewport } from "next"
 import { WhatsAppFloat } from "@/components/whatsapp-float"
 import { Toaster } from "react-hot-toast"
+import { GeistSans } from 'geist/font/sans'
 import "./globals.css"
+
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 5,
+  userScalable: true,
+  themeColor: '#14b8a6',
+  viewportFit: 'cover'
+}
 
 export const metadata: Metadata = {
   title: "انطلاقة - منصة الإعلانات الذكية الرائدة في السعودية | إدارة الحملات الإعلانية",
@@ -13,7 +23,6 @@ export const metadata: Metadata = {
   authors: [{ name: "انطلاقة", url: "https://intilaqa.com" }],
   creator: "انطلاقة",
   publisher: "انطلاقة",
-  viewport: "width=device-width, initial-scale=1",
   robots: "index, follow",
   openGraph: {
     title: "انطلاقة - منصة الإعلانات الذكية الرائدة في السعودية",
@@ -34,7 +43,7 @@ export const metadata: Metadata = {
       "ar-SA": "https://intilaqa.com",
     },
   },
-    generator: 'v0.app'
+  generator: 'v0.app'
 }
 
 export default function RootLayout({
@@ -43,17 +52,20 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="ar" dir="rtl">
+    <html lang="ar" dir="rtl" className={GeistSans.variable}>
       <head>
-        <meta name="theme-color" content="#14b8a6" />
+        <meta name="mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
         <meta name="format-detection" content="telephone=no" />
+        <link rel="icon" href="/antalaqa-icon.png" />
+        <link rel="apple-touch-icon" href="/antalaqa-icon.png" />
+        <link rel="shortcut icon" href="/antalaqa-icon.png" type="image/png" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link rel="dns-prefetch" href="https://api.whatsapp.com" />
       </head>
-      <body className="antialiased">
+      <body className="antialiased min-h-screen">
         {children}
         <WhatsAppFloat />
         <Toaster position="top-center" />

@@ -1,5 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  // output: 'export', // Configure for static file export
+  // distDir: 'dist', // Output directory for the build
+  staticPageGenerationTimeout: 300, // Increase timeout to 5 minutes
   eslint: {
     ignoreDuringBuilds: true,
   },
@@ -13,7 +16,13 @@ const nextConfig = {
     minimumCacheTTL: 31536000, // 1 year
     dangerouslyAllowSVG: true,
     contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
-    unoptimized: true,
+    unoptimized: false, // Enable image optimization
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: '**',
+      },
+    ],
   },
   compress: true,
   poweredByHeader: false,
@@ -24,7 +33,10 @@ const nextConfig = {
   experimental: {
     optimizeCss: true,
     optimizePackageImports: ['lucide-react', 'framer-motion'],
+    scrollRestoration: true,
+    nextScriptWorkers: true,
   },
+  staticPageGenerationTimeout: 180, // Increase timeout to 3 minutes
   headers: async () => {
     return [
       {
