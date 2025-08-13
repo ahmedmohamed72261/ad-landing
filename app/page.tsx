@@ -19,13 +19,14 @@ import { motion } from "framer-motion"
 import StatsMetricCard from "@/components/stats-metric-card"
 import { SharedHeader } from "@/components/shared-header"
 import Image from "next/image"
-import { lazy, Suspense } from "react"
+import dynamic from "next/dynamic"
 
-const CampaignPerformanceSection = lazy(() => import("@/components/campaign-performance-section"))
-const GCCSuccessSection = lazy(() => import("@/components/gcc-success-section"))
-const LaunchCompact = lazy(() => import("@/components/launch-compact"))
-const TestimonialsSection = lazy(() => import("@/components/testimonials-section"))
-const SocialMediaGrowthSection = lazy(() => import("@/components/social-media-growth-section"))
+const HomeSections = dynamic(() => import("@/components/home-sections"), {
+  ssr: false,
+  loading: () => <div className="min-h-[400px] w-full flex items-center justify-center">
+    <div className="text-white">جاري التحميل...</div>
+  </div>
+})
 
 const whatsappUrl =
   "https://api.whatsapp.com/send/?phone=966560431575&text=%D9%85%D8%B1%D8%AD%D8%A8%D8%A7%D9%8B%2B%D8%A3%D8%B1%D9%8A%D8%AF%2B%D8%A7%D9%84%D8%A7%D8%B3%D8%AA%D9%81%D8%B3%D8%A7%D8%B1%2B%D8%B9%D9%86%2B%D8%AE%D8%AF%D9%85%D8%A7%D8%AA%2B%D8%A7%D9%86%D8%B7%D9%84%D8%A7%D9%82%D8%A9%2B%D8%A7%D9%84%D8%A5%D8%B9%D9%84%D8%A7%D9%86%D9%8A%D8%A9&type=phone_number&app_absent=0"
@@ -281,28 +282,8 @@ export default function LandingPage() {
           </div>
         </section>
 
-        {/* Launch section */}
-        <section className="relative overflow-hidden bg-black py-16 md:py-24">
-          <div className="container mx-auto px-4">
-            <Suspense fallback={<div className="h-96 animate-pulse bg-gray-800 rounded-lg" />}>
-              <LaunchCompact />
-            </Suspense>
-          </div>
-        </section>
-
-        {/* Categories */}
-        <Suspense fallback={<div className="h-96 animate-pulse bg-gray-800 rounded-lg" />}>
-          <SocialMediaGrowthSection />
-        </Suspense>
-        <Suspense fallback={<div className="h-96 animate-pulse bg-gray-800 rounded-lg" />}>
-          <GCCSuccessSection />
-        </Suspense>
-        <Suspense fallback={<div className="h-96 animate-pulse bg-gray-800 rounded-lg" />}>
-          <CampaignPerformanceSection />
-        </Suspense>
-        <Suspense fallback={<div className="h-96 animate-pulse bg-gray-800 rounded-lg" />}>
-          <TestimonialsSection />
-        </Suspense>
+        {/* Dynamic Sections */}
+        <HomeSections />
 
         <section className="relative overflow-hidden bg-gray-950 py-16 md:py-24">
           <div className="container relative z-10 mx-auto px-4 text-center">
