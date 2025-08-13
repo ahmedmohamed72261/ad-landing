@@ -1,3 +1,5 @@
+'use client'
+
 import emailjs from "@emailjs/browser"
 
 // EmailJS configuration
@@ -21,8 +23,6 @@ export interface EmailData {
   topic?: string
   message: string
 }
-
-"use server"
 
 export const sendEmail = async (data: EmailData): Promise<boolean> => {
   try {
