@@ -22,6 +22,8 @@ export interface EmailData {
   message: string
 }
 
+"use server"
+
 export const sendEmail = async (data: EmailData): Promise<boolean> => {
   try {
     if (!EMAILJS_CONFIG.SERVICE_ID || !EMAILJS_CONFIG.TEMPLATE_ID || !EMAILJS_CONFIG.PUBLIC_KEY) {
