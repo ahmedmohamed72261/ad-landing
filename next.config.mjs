@@ -1,7 +1,5 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // output: 'export', // Configure for static file export
-  // distDir: 'dist', // Output directory for the build
   staticPageGenerationTimeout: 300, // Increase timeout to 5 minutes
   eslint: {
     ignoreDuringBuilds: true,
@@ -36,7 +34,6 @@ const nextConfig = {
     scrollRestoration: true,
     nextScriptWorkers: true,
   },
-  staticPageGenerationTimeout: 180, // Increase timeout to 3 minutes
   headers: async () => {
     return [
       {
