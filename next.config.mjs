@@ -1,6 +1,5 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  staticPageGenerationTimeout: 300, // Increase timeout to 5 minutes
   eslint: {
     ignoreDuringBuilds: true,
   },
@@ -9,30 +8,24 @@ const nextConfig = {
   },
   images: {
     formats: ['image/webp', 'image/avif'],
-    deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
-    imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
-    minimumCacheTTL: 31536000, // 1 year
+    deviceSizes: [640, 750, 828, 1080, 1200, 1920],
+    imageSizes: [16, 32, 48, 64, 96, 128, 256],
+    minimumCacheTTL: 604800, // Increased cache TTL to 7 days for better performance
     dangerouslyAllowSVG: true,
     contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
-    unoptimized: false, // Enable image optimization
-    remotePatterns: [
-      {
-        protocol: 'https',
-        hostname: '**',
-      },
-    ],
+    unoptimized: false,
+    domains: ['res.cloudinary.com', 'ad-landing-blog-server.vercel.app'],
   },
   compress: true,
   poweredByHeader: false,
-  generateEtags: true,
+  generateEtags: true, // Enabled ETags for better caching
   trailingSlash: false,
   reactStrictMode: true,
   swcMinify: true,
   experimental: {
-    optimizeCss: true,
-    optimizePackageImports: ['lucide-react', 'framer-motion'],
-    scrollRestoration: true,
-    nextScriptWorkers: true,
+    optimizePackageImports: ['lucide-react'],
+    optimizeCss: true, // Optimize CSS for better performance
+    scrollRestoration: true, // Improve scroll experience
   },
   headers: async () => {
     return [
@@ -46,32 +39,6 @@ const nextConfig = {
           {
             key: 'X-Frame-Options',
             value: 'DENY',
-          },
-          {
-            key: 'X-XSS-Protection',
-            value: '1; mode=block',
-          },
-          {
-            key: 'Referrer-Policy',
-            value: 'origin-when-cross-origin',
-          },
-        ],
-      },
-      {
-        source: '/(.*)\\.(jpg|jpeg|png|webp|avif|ico|svg)',
-        headers: [
-          {
-            key: 'Cache-Control',
-            value: 'public, max-age=31536000, immutable',
-          },
-        ],
-      },
-      {
-        source: '/(.*)\\.(js|css)',
-        headers: [
-          {
-            key: 'Cache-Control',
-            value: 'public, max-age=31536000, immutable',
           },
         ],
       },

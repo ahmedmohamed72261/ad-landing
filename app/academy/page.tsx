@@ -1,11 +1,7 @@
-import dynamic from 'next/dynamic'
-import { GraduationCap, BookOpen, Presentation } from "lucide-react"
+"use client"
 
-// Dynamically import the InternalPage component with SSR disabled to improve build time
-const InternalPage = dynamic(() => import("@/components/internal-page"), {
-  ssr: false,
-  loading: () => <div className="min-h-screen bg-black flex items-center justify-center text-white">جاري التحميل...</div>
-})
+import InternalPage from "@/components/internal-page"
+import { GraduationCap, BookOpen, Presentation } from "lucide-react"
 
 export default function Page() {
   return (

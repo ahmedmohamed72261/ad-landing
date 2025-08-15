@@ -1,3 +1,5 @@
+"use client"
+
 import { SharedHeader } from "@/components/shared-header"
 import { SharedFooter } from "@/components/shared-footer"
 import { Calendar, Clock, ArrowRight, Share2, Tag } from "lucide-react"
@@ -6,8 +8,42 @@ import Link from "next/link"
 import { notFound } from "next/navigation"
 import { getBlogBySlug } from "@/lib/blog-service"
 
-const blogPosts = {
- 
+// Fallback blog data in case API fails
+const fallbackBlogPosts = {
+  "roas-optimization-guide": {
+    id: 1,
+    title: "كيف تحقق عائد استثمار 300% من حملاتك الإعلانية",
+    excerpt: "اكتشف الاستراتيجيات المتقدمة لتحسين ROAS وزيادة أرباحك من الإعلانات الرقمية مع منصة انطلاقة.",
+    image: "/blog-roas-success.png",
+    date: "2025-01-15",
+    readTime: "5 دقائق",
+    category: "تحسين الأداء",
+    featured: true,
+    content: `
+      <h2>مقدمة</h2>
+      <p>في عالم الإعلانات الرقمية اليوم، يعتبر تحقيق عائد استثمار مرتفع (ROAS) الهدف الأساسي لكل مسوق. مع منصة انطلاقة، يمكنك تحقيق عائد استثمار يصل إلى 300% من خلال تطبيق الاستراتيجيات المتقدمة التي سنشاركها معك في هذا المقال.</p>
+      
+      <h2>1. تحليل البيانات بدقة</h2>
+      <p>البداية الصحيحة لأي حملة إعلانية ناجحة تكمن في تحليل البيانات بدقة. نحن في انطلاقة نستخدم أدوات تحليل متقدمة لفهم سلوك جمهورك المستهدف وتحديد أفضل الأوقات والمنصات للوصول إليهم.</p>
+      
+      <h2>2. الاستهداف الذكي</h2>
+      <p>الاستهداف الذكي يعني الوصول إلى الأشخاص المناسبين في الوقت المناسب. نحن نستخدم تقنيات الذكاء الاصطناعي لتحديد الجمهور الأكثر احتمالاً للتفاعل مع إعلاناتك وإجراء عمليات شراء.</p>
+      
+      <h2>3. تحسين الإعلانات باستمرار</h2>
+      <p>التحسين المستمر هو مفتاح النجاح. نحن نراقب أداء حملاتك على مدار الساعة ونجري التعديلات اللازمة لضمان تحقيق أفضل النتائج الممكنة.</p>
+      
+      <h2>النتائج المتوقعة</h2>
+      <p>باتباع هذه الاستراتيجيات، يمكن لعملائنا تحقيق:</p>
+      <ul>
+        <li>زيادة في العائد على الاستثمار بنسبة تصل إلى 300%</li>
+        <li>تقليل تكلفة الاكتساب بنسبة 40%</li>
+        <li>زيادة معدلات التحويل بنسبة 60%</li>
+      </ul>
+      
+      <h2>خاتمة</h2>
+      <p>تحقيق عائد استثمار مرتفع ليس مجرد حلم، بل واقع يمكن تحقيقه مع الاستراتيجيات الصحيحة والأدوات المناسبة. انضم إلى منصة انطلاقة اليوم وابدأ رحلتك نحو تحقيق أرباح استثنائية من حملاتك الإعلانية.</p>
+    `,
+  }
 }
 
 interface BlogPostPageProps {
@@ -17,27 +53,38 @@ interface BlogPostPageProps {
 }
 
 export default async function BlogPostPage({ params }: BlogPostPageProps) {
-  const { slug } = params
+  // Try to fetch the blog post from the API
+  let post = await getBlogBySlug(params.slug)
+  let isUsingFallback = false
   
-  // Try to fetch from API first
-  let post: any = await getBlogBySlug(slug)
-  
-  // Fallback to static data if API fails or post not found
+  // If API fails, use fallback data
   if (!post) {
-    post = blogPosts[slug as keyof typeof blogPosts]
-    if (!post) {
+    const fallbackPost = fallbackBlogPosts[params.slug as keyof typeof fallbackBlogPosts]
+    
+    if (!fallbackPost) {
       notFound()
     }
-  }
-  
-  // Map API data structure to match our UI expectations if it's from API
-  if (post._id) {
+    
+    // Convert fallback post to match API format
     post = {
-      ...post,
-      image: post.featuredImage?.url || "/placeholder.svg",
-      date: post.publishedAt || post.createdAt,
-      readTime: `${post.readTime || 1} دقائق`
+      _id: fallbackPost.id.toString(),
+      title: fallbackPost.title,
+      slug: params.slug,
+      content: fallbackPost.content,
+      excerpt: fallbackPost.excerpt,
+      featuredImage: { url: fallbackPost.image, publicId: '' },
+      author: { _id: '', username: 'admin', firstName: 'Admin', lastName: '', avatar: '' },
+      category: fallbackPost.category,
+      tags: [],
+      status: 'published',
+      views: 0,
+      readTime: parseInt(fallbackPost.readTime) || 5,
+      createdAt: fallbackPost.date,
+      updatedAt: fallbackPost.date,
+      publishedAt: fallbackPost.date
     }
+    
+    isUsingFallback = true
   }
 
   return (
@@ -59,7 +106,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
             <div className="flex items-center gap-4 mb-6 text-sm text-gray-400">
               <div className="flex items-center gap-2">
                 <Calendar className="w-4 h-4" />
-                <span>{new Date(post.date).toLocaleDateString("ar-SA")}</span>
+                <span>{new Date(post.publishedAt).toLocaleDateString("ar-SA")}</span>
               </div>
               <div className="flex items-center gap-2">
                 <Clock className="w-4 h-4" />
@@ -75,7 +122,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
             <p className="text-xl text-gray-300 leading-relaxed mb-8">{post.excerpt}</p>
 
             <div className="relative h-64 md:h-96 rounded-2xl overflow-hidden mb-8">
-              <Image src={post.image || "/placeholder.svg"} alt={post.title} fill className="object-cover" />
+              <Image src={post.featuredImage?.url || "/placeholder.svg"} alt={post.title} fill className="object-cover" />
             </div>
 
             <div className="flex items-center justify-between border-b border-gray-800 pb-6">
@@ -96,13 +143,10 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
           </header>
 
           {/* Article Content */}
-          <div className="prose prose-invert prose-lg max-w-none prose-headings:text-teal-400 prose-headings:font-bold prose-p:text-gray-300 prose-p:leading-relaxed prose-ul:text-gray-300 prose-li:mb-2">
-            {post._id ? (
-              <div className="whitespace-pre-line">{post.content}</div>
-            ) : (
-              <div dangerouslySetInnerHTML={{ __html: post.content }} />
-            )}
-          </div>
+          <div
+            className="prose prose-invert prose-lg max-w-none prose-headings:text-teal-400 prose-headings:font-bold prose-p:text-gray-300 prose-p:leading-relaxed prose-ul:text-gray-300 prose-li:mb-2"
+            dangerouslySetInnerHTML={{ __html: post.content }}
+          />
 
           {/* Call to Action */}
           <div className="mt-16 bg-gradient-to-r from-teal-400/10 to-blue-400/10 rounded-2xl p-8 text-center">
@@ -121,25 +165,4 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
       <SharedFooter />
     </div>
   )
-}
-
-export async function generateStaticParams() {
-  try {
-    // Try to get blogs from API first
-    const response = await fetch('https://ad-landing-blog-server.vercel.app/api/blogs');
-    const { blogs } = await response.json();
-    
-    if (blogs && blogs.length > 0) {
-      return blogs.map((blog: any) => ({
-        slug: blog.slug,
-      }));
-    }
-  } catch (error) {
-    console.error('Error generating static params:', error);
-  }
-  
-  // Fallback to static data if API fails
-  return Object.keys(blogPosts).map((slug) => ({
-    slug,
-  }));
 }

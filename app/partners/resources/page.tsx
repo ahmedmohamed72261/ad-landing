@@ -1,3 +1,5 @@
+"use client"
+
 import InternalPage from "@/components/internal-page"
 import { FolderDown, Presentation, FileText } from "lucide-react"
 

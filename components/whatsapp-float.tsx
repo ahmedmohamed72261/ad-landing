@@ -13,12 +13,12 @@ export function WhatsAppFloat() {
   }
 
   return (
-    <div className="fixed left-4 md:left-6 bottom-4 md:bottom-6 z-50">
+    <div className="fixed left-6 bottom-6 z-50">
       <button
         onClick={handleWhatsAppClick}
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
-        className="group relative flex h-12 w-12 md:h-14 md:w-14 items-center justify-center rounded-full bg-green-500 text-white shadow-lg transition-all duration-300 hover:bg-green-600 hover:scale-110"
+        className="group relative flex h-14 w-14 items-center justify-center rounded-full bg-green-500 text-white shadow-lg transition-all duration-300 hover:bg-green-600 hover:scale-110"
         aria-label="تواصل عبر واتساب"
       >
         {/* Pulse animation rings */}
@@ -26,11 +26,11 @@ export function WhatsAppFloat() {
         <div className="absolute inset-0 rounded-full bg-green-500 animate-pulse opacity-30"></div>
 
         {/* WhatsApp icon */}
-        <MessageCircle className="h-6 w-6 md:h-7 md:w-7 relative z-10" />
+        <MessageCircle className="h-7 w-7 relative z-10" />
 
-        {/* Tooltip - Hidden on mobile, visible on hover for desktop */}
+        {/* Tooltip */}
         <div
-          className={`hidden md:block absolute left-full ml-3 top-1/2 -translate-y-1/2 whitespace-nowrap rounded-lg bg-gray-900 px-3 py-2 text-sm text-white shadow-lg transition-all duration-200 ${
+          className={`absolute left-full ml-3 top-1/2 -translate-y-1/2 whitespace-nowrap rounded-lg bg-gray-900 px-3 py-2 text-sm text-white shadow-lg transition-all duration-200 ${
             isHovered ? "opacity-100 translate-x-0" : "opacity-0 translate-x-2 pointer-events-none"
           }`}
         >
@@ -38,9 +38,6 @@ export function WhatsAppFloat() {
           {/* Arrow */}
           <div className="absolute right-full top-1/2 -translate-y-1/2 border-4 border-transparent border-l-gray-900"></div>
         </div>
-        
-        {/* Mobile label - always visible */}
-        <span className="md:hidden absolute top-0 right-full mr-2 px-2 py-1 text-xs bg-green-600 text-white rounded-lg whitespace-nowrap">تواصل معنا</span>
       </button>
     </div>
   )

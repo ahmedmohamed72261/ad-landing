@@ -64,6 +64,12 @@ export default function RootLayout({
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link rel="dns-prefetch" href="https://api.whatsapp.com" />
+        <link rel="preload" href="/antalaqa-logo.jpg" as="image" />
+        <link rel="preconnect" href="https://res.cloudinary.com" />
+        <link rel="dns-prefetch" href="https://res.cloudinary.com" />
+        <meta name="google" content="notranslate" />
+        <meta name="theme-color" content="#14b8a6" />
+        <link rel="manifest" href="/manifest.json" />
       </head>
       <body className="antialiased min-h-screen">
         {children}

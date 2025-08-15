@@ -1,3 +1,5 @@
+"use client"
+
 import InternalPage from "@/components/internal-page"
 import { Handshake, Megaphone, Coins, ShieldCheck } from "lucide-react"
 

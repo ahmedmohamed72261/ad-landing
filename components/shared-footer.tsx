@@ -1,5 +1,3 @@
-"use client"
-
 import Link from "next/link"
 import { Linkedin, Instagram, X, Youtube } from "lucide-react"
 import FooterBadges from "@/components/footer-badges"
@@ -35,19 +33,19 @@ export function SharedFooter() {
             </p>
 
             <div className="mt-4 flex gap-4 text-white/80">
-              <a href="https://www.linkedin.com/" className="transition-colors hover:text-white" aria-label="LinkedIn">
+              <a href="#" className="transition-colors hover:text-white" aria-label="LinkedIn">
                 <Linkedin className="h-6 w-6" />
               </a>
-              <a href="https://www.instagram.com/" className="transition-colors hover:text-white" aria-label="Instagram">
+              <a href="#" className="transition-colors hover:text-white" aria-label="TikTok">
                 <Instagram className="h-6 w-6" />
               </a>
-              <a href="https://twitter.com/" className="transition-colors hover:text-white" aria-label="X (Twitter)">
+              <a href="#" className="transition-colors hover:text-white" aria-label="X (Twitter)">
                 <X className="h-6 w-6" />
               </a>
-              <a href="https://www.youtube.com/" className="transition-colors hover:text-white" aria-label="Youtube">
+              <a href="#" className="transition-colors hover:text-white" aria-label="Youtube">
                 <Youtube className="h-6 w-6" />
               </a>
-              <a href="https://www.instagram.com/" className="transition-colors hover:text-white" aria-label="Instagram">
+              <a href="#" className="transition-colors hover:text-white" aria-label="Instagram">
                 <Instagram className="h-6 w-6" />
               </a>
             </div>

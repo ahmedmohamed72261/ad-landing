@@ -53,7 +53,9 @@ export async function getBlogs(category?: string): Promise<BlogResponse> {
       url += `?category=${encodeURIComponent(category)}`;
     }
     
-    const response = await fetch(url, { next: { revalidate: 3600 } }); // Revalidate every hour
+    const response = await fetch(url, { 
+      next: { revalidate: 3600 } // Revalidate every hour for better performance
+    });
     
     if (!response.ok) {
       throw new Error(`Failed to fetch blogs: ${response.status}`);
@@ -78,16 +80,31 @@ export async function getBlogs(category?: string): Promise<BlogResponse> {
 
 export async function getBlogBySlug(slug: string): Promise<BlogPost | null> {
   try {
-    const response = await fetch(API_URL, { next: { revalidate: 3600 } });
+    // First try to get all blogs and find the one with matching slug
+    // This is a workaround since the API endpoint for individual blogs might not be working as expected
+    const allBlogsResponse = await fetch(API_URL, { 
+      next: { revalidate: 3600 } // Revalidate every hour for better performance
+    });
     
-    if (!response.ok) {
-      throw new Error(`Failed to fetch blogs: ${response.status}`);
+    if (allBlogsResponse.ok) {
+      const data = await allBlogsResponse.json();
+      const matchingBlog = data.blogs.find((blog: BlogPost) => blog.slug === slug);
+      
+      if (matchingBlog) {
+        return matchingBlog;
+      }
     }
     
-    const data: BlogResponse = await response.json();
-    const blog = data.blogs.find(blog => blog.slug === slug);
+    // If not found in the list or the list request failed, try direct endpoint
+    const response = await fetch(`${API_URL}/${slug}`, { 
+      next: { revalidate: 3600 } // Revalidate every hour for better performance
+    });
     
-    return blog || null;
+    if (!response.ok) {
+      throw new Error(`Failed to fetch blog: ${response.status}`);
+    }
+    
+    return await response.json();
   } catch (error) {
     console.error(`Error fetching blog with slug ${slug}:`, error);
     return null;
@@ -96,17 +113,15 @@ export async function getBlogBySlug(slug: string): Promise<BlogPost | null> {
 
 export async function getBlogCategories(): Promise<string[]> {
   try {
-    const response = await fetch(API_URL, { next: { revalidate: 3600 } });
+    const response = await fetch(`${API_URL}/categories`, { 
+      next: { revalidate: 86400 } // Revalidate categories once per day
+    });
     
     if (!response.ok) {
-      throw new Error(`Failed to fetch blogs: ${response.status}`);
+      throw new Error(`Failed to fetch categories: ${response.status}`);
     }
     
-    const data: BlogResponse = await response.json();
-    // Extract unique categories
-    const categories = [...new Set(data.blogs.map(blog => blog.category))];
-    
-    return categories;
+    return await response.json();
   } catch (error) {
     console.error('Error fetching blog categories:', error);
     return [];

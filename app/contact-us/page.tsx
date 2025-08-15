@@ -1,3 +1,5 @@
+"use client"
+
 import InternalPage from "@/components/internal-page"
 import { Mail, Headphones, Clock5, ShieldCheck } from "lucide-react"
 
@@ -14,17 +16,7 @@ export default function Page() {
         { label: "أيام العمل", value: "أحد–خميس" },
         { label: "ساعات الدعم", value: "9ص–6م" },
       ]}
-      policyList={[
-        {
-          title: "قبل الإرسال",
-          items: ["اذكر رقم الطلب/المتجر إن وُجد.", "حدّد القناة (جوجل/ميتا/لينكدإن).", "ارفق لقطات شاشة مختصرة."],
-        },
-        {
-          title: "بعد الإرسال",
-          items: ["ستصلك رسالة تأكيد.", "سنراجع ونرد خلال 24 ساعة.", "سنقترح خطة حل واضحة."],
-        },
-      ]}
-      sections={[
+            sections={[
         {
           title: "قنوات التواصل",
           paragraphs: [

@@ -1,3 +1,5 @@
+"use client"
+
 import InternalPage from "@/components/internal-page"
 import { ShoppingBag, Sparkles, Repeat2, Gauge } from "lucide-react"
 

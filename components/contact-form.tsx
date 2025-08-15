@@ -9,7 +9,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label"
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select"
 import { useToast } from "@/hooks/use-toast"
-import { sendEmail } from "@/lib/emailjs"
+import { sendEmailAction } from "@/app/actions/send-email"
 
 export default function ContactForm() {
   const { toast } = useToast()
@@ -32,7 +32,7 @@ export default function ContactForm() {
     setLoading(true)
 
     try {
-      const success = await sendEmail({
+      const result = await sendEmailAction({
         name: data.name,
         email: data.email,
         phone: data.phone,
@@ -40,14 +40,14 @@ export default function ContactForm() {
         message: data.message,
       })
 
-      if (success) {
+      if (result.success) {
         toast({
           title: "تم الإرسال بنجاح",
           description: "وصلتنا رسالتك وسنعاودك خلال 24 ساعة.",
         })
         setData({ name: "", email: "", phone: "", topic: "support", message: "" })
       } else {
-        throw new Error("Failed to send email")
+        throw new Error(result.error || "Failed to send email")
       }
     } catch (error) {
       toast({

@@ -15,29 +15,32 @@ import {
 } from "lucide-react"
 import { AutoScrollContainer } from "@/components/auto-scroll-container"
 import { SharedFooter } from "@/components/shared-footer"
-import { motion } from "framer-motion"
 import StatsMetricCard from "@/components/stats-metric-card"
 import { SharedHeader } from "@/components/shared-header"
 import Image from "next/image"
-import dynamic from "next/dynamic"
+import { lazy, Suspense } from "react"
 
-const HomeSections = dynamic(() => import("@/components/home-sections"), {
-  ssr: false,
-  loading: () => <div className="min-h-[400px] w-full flex items-center justify-center">
-    <div className="text-white">جاري التحميل...</div>
-  </div>
-})
+const CampaignPerformanceSection = lazy(() => import("@/components/campaign-performance-section"))
+const GCCSuccessSection = lazy(() => import("@/components/gcc-success-section"))
+const LaunchCompact = lazy(() => import("@/components/launch-compact"))
+const TestimonialsSection = lazy(() => import("@/components/testimonials-section"))
+const SocialMediaGrowthSection = lazy(() => import("@/components/social-media-growth-section"))
 
 const whatsappUrl =
   "https://api.whatsapp.com/send/?phone=966560431575&text=%D9%85%D8%B1%D8%AD%D8%A8%D8%A7%D9%8B%2B%D8%A3%D8%B1%D9%8A%D8%AF%2B%D8%A7%D9%84%D8%A7%D8%B3%D8%AA%D9%81%D8%B3%D8%A7%D8%B1%2B%D8%B9%D9%86%2B%D8%AE%D8%AF%D9%85%D8%A7%D8%AA%2B%D8%A7%D9%86%D8%B7%D9%84%D8%A7%D9%82%D8%A9%2B%D8%A7%D9%84%D8%A5%D8%B9%D9%84%D8%A7%D9%86%D9%8A%D8%A9&type=phone_number&app_absent=0"
 
+const LoadingFallback = ({ message = "جاري التحميل..." }: { message?: string }) => (
+  <div className="h-96 animate-pulse bg-gray-800 rounded-lg flex items-center justify-center text-gray-400">
+    {message}
+  </div>
+)
+
 export default function LandingPage() {
   return (
     <div className="min-h-screen bg-black text-white" dir="rtl">
-      {/* Header */}
       <SharedHeader currentPage="الرئيسية" />
 
-       <main>
+      <main>
         {/* Hero */}
         <section className="relative flex min-h-[100vh] items-center justify-center overflow-hidden bg-gradient-to-br from-gray-950 via-gray-900 to-black">
           {/* Background effects */}
@@ -95,36 +98,18 @@ export default function LandingPage() {
 
             {/* Trust indicators */}
             <AutoScrollContainer className="flex items-center justify-start gap-6 sm:gap-6 lg:gap-8 text-gray-400 sm:justify-center overflow-x-auto">
-              <motion.div
-                className="flex items-center gap-2 whitespace-nowrap"
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, amount: 0.8 }}
-                transition={{ duration: 0.5, delay: 0.1 }}
-              >
+              <div className="flex items-center gap-2 whitespace-nowrap">
                 <CheckCircle2 className="h-5 w-5 sm:h-5 sm:w-5 text-teal-400 flex-shrink-0" />
                 <span className="text-sm sm:text-sm">أكثر من 10,000 متجر نشط</span>
-              </motion.div>
-              <motion.div
-                className="flex items-center gap-2 whitespace-nowrap"
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, amount: 0.8 }}
-                transition={{ duration: 0.5, delay: 0.2 }}
-              >
+              </div>
+              <div className="flex items-center gap-2 whitespace-nowrap">
                 <CheckCircle2 className="h-5 w-5 sm:h-5 sm:w-5 text-teal-400 flex-shrink-0" />
                 <span className="text-sm sm:text-sm">40 مليون ريال مبيعات</span>
-              </motion.div>
-              <motion.div
-                className="flex items-center gap-2 whitespace-nowrap"
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, amount: 0.8 }}
-                transition={{ duration: 0.5, delay: 0.3 }}
-              >
+              </div>
+              <div className="flex items-center gap-2 whitespace-nowrap">
                 <CheckCircle2 className="h-5 w-5 sm:h-5 sm:w-5 text-teal-400 flex-shrink-0" />
                 <span className="text-sm sm:text-sm">دعم 24/7</span>
-              </motion.div>
+              </div>
             </AutoScrollContainer>
           </div>
 
@@ -282,261 +267,94 @@ export default function LandingPage() {
           </div>
         </section>
 
-        {/* Dynamic Sections */}
-        <HomeSections />
+        {/* Launch section */}
+        <section className="relative overflow-hidden bg-black py-16 md:py-24">
+          <div className="container mx-auto px-4">
+            <Suspense fallback={<LoadingFallback />}>
+              <LaunchCompact />
+            </Suspense>
+          </div>
+        </section>
+
+        <Suspense fallback={<LoadingFallback />}>
+          <SocialMediaGrowthSection />
+        </Suspense>
+        <Suspense fallback={<LoadingFallback />}>
+          <GCCSuccessSection />
+        </Suspense>
+        <Suspense fallback={<LoadingFallback />}>
+          <CampaignPerformanceSection />
+        </Suspense>
+        <Suspense fallback={<LoadingFallback />}>
+          <TestimonialsSection />
+        </Suspense>
 
         <section className="relative overflow-hidden bg-gray-950 py-16 md:py-24">
           <div className="container relative z-10 mx-auto px-4 text-center">
             <h2 className="mb-4 text-4xl font-bold md:text-5xl">شركاء النجاح</h2>
             <p className="mb-12 text-lg text-gray-300">يثق بنا أكثر من 4000 متجر وعلامة تجارية رائدة في المنطقة</p>
             <AutoScrollContainer className="flex justify-center">
-              <div className="flex gap-8 shrink-0">
-                <div className="flex h-16 w-24 items-center justify-center rounded-lg bg-white p-3 shadow-md transition-all duration-300 hover:-translate-y-1 hover:shadow-lg sm:h-20 sm:w-28 md:h-24 md:w-32">
-                  <Image
-                    src="/kdc-kingdom-dates.png"
-                    alt="شركة تمور المملكة - KDC Kingdom Dates"
-                    width={128}
-                    height={96}
-                    className="h-full w-full object-contain"
-                    loading="lazy"
-                    sizes="(max-width: 640px) 96px, (max-width: 768px) 112px, 128px"
-                  />
-                </div>
-                <div className="flex h-16 w-24 items-center justify-center rounded-lg bg-white p-3 shadow-md transition-all duration-300 hover:-translate-y-1 hover:shadow-lg sm:h-20 sm:w-28 md:h-24 md:w-32">
-                  <Image
-                    src="/reeq-alnahl.png"
-                    alt="شركة ريق النحل - Reeq Alnahl"
-                    width={128}
-                    height={96}
-                    className="h-full w-full object-contain"
-                    loading="lazy"
-                    sizes="(max-width: 640px) 96px, (max-width: 768px) 112px, 128px"
-                  />
-                </div>
-                <div className="flex h-16 w-24 items-center justify-center rounded-lg bg-white p-3 shadow-md transition-all duration-300 hover:-translate-y-1 hover:shadow-lg sm:h-20 sm:w-28 md:h-24 md:w-32">
-                  <Image
-                    src="/naseel.png"
-                    alt="شركة نسيل - Naseel"
-                    width={128}
-                    height={96}
-                    className="h-full w-full object-contain"
-                    loading="lazy"
-                    sizes="(max-width: 640px) 96px, (max-width: 768px) 112px, 128px"
-                  />
-                </div>
-                <div className="flex h-16 w-24 items-center justify-center rounded-lg bg-white p-3 shadow-md transition-all duration-300 hover:-translate-y-1 hover:shadow-lg sm:h-20 sm:w-28 md:h-24 md:w-32">
-                  <Image
-                    src="/geometric-logo.png"
-                    alt="شريك تجاري - Partner Company"
-                    width={128}
-                    height={96}
-                    className="h-full w-full object-contain"
-                    loading="lazy"
-                    sizes="(max-width: 640px) 96px, (max-width: 768px) 112px, 128px"
-                  />
-                </div>
-                <div className="flex h-16 w-24 items-center justify-center rounded-lg bg-white p-3 shadow-md transition-all duration-300 hover:-translate-y-1 hover:shadow-lg sm:h-20 sm:w-28 md:h-24 md:w-32">
-                  <Image
-                    src="/desar.png"
-                    alt="شركة ديسار - Desar"
-                    width={128}
-                    height={96}
-                    className="h-full w-full object-contain"
-                    loading="lazy"
-                    sizes="(max-width: 640px) 96px, (max-width: 768px) 112px, 128px"
-                  />
-                </div>
-                <div className="flex h-16 w-24 items-center justify-center rounded-lg bg-white p-3 shadow-md transition-all duration-300 hover:-translate-y-1 hover:shadow-lg sm:h-20 sm:w-28 md:h-24 md:w-32">
-                  <Image
-                    src="/tmoor.png"
-                    alt="مؤسسة تمور للخدمات الإنسانية - Tmoor Humanitarian Services"
-                    width={128}
-                    height={96}
-                    className="h-full w-full object-contain"
-                    loading="lazy"
-                    sizes="(max-width: 640px) 96px, (max-width: 768px) 112px, 128px"
-                  />
-                </div>
-                <div className="flex h-16 w-24 items-center justify-center rounded-lg bg-white p-3 shadow-md transition-all duration-300 hover:-translate-y-1 hover:shadow-lg sm:h-20 sm:w-28 md:h-24 md:w-32">
-                  <Image
-                    src="/hair-stars.png"
-                    alt="صالون هير ستارز - Hair Stars Salon"
-                    width={128}
-                    height={96}
-                    className="h-full w-full object-contain"
-                    loading="lazy"
-                    sizes="(max-width: 640px) 96px, (max-width: 768px) 112px, 128px"
-                  />
-                </div>
-                <div className="flex h-16 w-24 items-center justify-center rounded-lg bg-white p-3 shadow-md transition-all duration-300 hover:-translate-y-1 hover:shadow-lg sm:h-20 sm:w-28 md:h-24 md:w-32">
-                  <Image
-                    src="/naass-menswear.png"
-                    alt="ناس للأزياء الرجالية - NAASS Men's Wear"
-                    width={128}
-                    height={96}
-                    className="h-full w-full object-contain"
-                    loading="lazy"
-                    sizes="(max-width: 640px) 96px, (max-width: 768px) 112px, 128px"
-                  />
-                </div>
-                <div className="flex h-16 w-24 items-center justify-center rounded-lg bg-white p-3 shadow-md transition-all duration-300 hover:-translate-y-1 hover:shadow-lg sm:h-20 sm:w-28 md:h-24 md:w-32">
-                  <Image
-                    src="/flip.png"
-                    alt="شركة فليب - Flip"
-                    width={128}
-                    height={96}
-                    className="h-full w-full object-contain"
-                    loading="lazy"
-                    sizes="(max-width: 640px) 96px, (max-width: 768px) 112px, 128px"
-                  />
-                </div>
-                <div className="flex h-16 w-24 items-center justify-center rounded-lg bg-white p-3 shadow-md transition-all duration-300 hover:-translate-y-1 hover:shadow-lg sm:h-20 sm:w-28 md:h-24 md:w-32">
-                  <Image
-                    src="/amazon-logo.png"
-                    alt="أمازون - Amazon"
-                    width={128}
-                    height={96}
-                    className="h-full w-full object-contain"
-                    loading="lazy"
-                    sizes="(max-width: 640px) 96px, (max-width: 768px) 112px, 128px"
-                  />
-                </div>
-                <div className="flex h-16 w-24 items-center justify-center rounded-lg bg-white p-3 shadow-md transition-all duration-300 hover:-translate-y-1 hover:shadow-lg sm:h-20 sm:w-28 md:h-24 md:w-32">
-                  <Image
-                    src="/google-logo.png"
-                    alt="جوجل - Google"
-                    width={128}
-                    height={96}
-                    className="h-full w-full object-contain"
-                    loading="lazy"
-                    sizes="(max-width: 640px) 96px, (max-width: 768px) 112px, 128px"
-                  />
-                </div>
+              <div className="flex gap-8 me-12 shrink-0">
+                {[
+                  { src: "/kdc-kingdom-dates.png", alt: "شركة تمور المملكة - KDC Kingdom Dates" },
+                  { src: "/reeq-alnahl.png", alt: "شركة ريق النحل - Reeq Alnahl" },
+                  { src: "/naseel.png", alt: "شركة نسيل - Naseel" },
+                  { src: "/geometric-logo.png", alt: "شريك تجاري - Partner Company" },
+                  { src: "/desar.png", alt: "شركة ديسار - Desar" },
+                  { src: "/tmoor.png", alt: "مؤسسة تمور للخدمات الإنسانية - Tmoor Humanitarian Services" },
+                  { src: "/hair-stars.png", alt: "صالون هير ستارز - Hair Stars Salon" },
+                  { src: "/naass-menswear.png", alt: "ناس للأزياء الرجالية - NAASS Men's Wear" },
+                  { src: "/flip.png", alt: "شركة فليب - Flip" },
+                  { src: "/amazon-logo.png", alt: "أمازون - Amazon" },
+                  { src: "/google-logo.png", alt: "جوجل - Google" },
+                ].map((logo, index) => (
+                  <div
+                    key={index}
+                    className="flex h-16 w-24 mx-2 items-center justify-center rounded-lg bg-white p-3 shadow-md transition-all duration-300 hover:-translate-y-1 hover:shadow-lg sm:h-20 sm:w-28 md:h-24 md:w-32"
+                  >
+                    <Image
+                      src={logo.src || "/placeholder.svg"}
+                      alt={logo.alt}
+                      width={128}
+                      height={96}
+                      className="h-full w-full object-contain"
+                      loading="lazy"
+                      sizes="(max-width: 640px) 96px, (max-width: 768px) 112px, 128px"
+                    />
+                  </div>
+                ))}
               </div>
 
               {/* Duplicate set for seamless loop */}
               <div className="flex gap-8 shrink-0" aria-hidden="true">
-                <div className="flex h-16 w-24 items-center justify-center rounded-lg bg-white p-3 shadow-md transition-all duration-300 hover:-translate-y-1 hover:shadow-lg sm:h-20 sm:w-28 md:h-24 md:w-32">
-                  <Image
-                    src="/kdc-kingdom-dates.png"
-                    alt=""
-                    width={128}
-                    height={96}
-                    className="h-full w-full object-contain"
-                    loading="lazy"
-                    sizes="(max-width: 640px) 96px, (max-width: 768px) 112px, 128px"
-                  />
-                </div>
-                <div className="flex h-16 w-24 items-center justify-center rounded-lg bg-white p-3 shadow-md transition-all duration-300 hover:-translate-y-1 hover:shadow-lg sm:h-20 sm:w-28 md:h-24 md:w-32">
-                  <Image
-                    src="/reeq-alnahl.png"
-                    alt=""
-                    width={128}
-                    height={96}
-                    className="h-full w-full object-contain"
-                    loading="lazy"
-                    sizes="(max-width: 640px) 96px, (max-width: 768px) 112px, 128px"
-                  />
-                </div>
-                <div className="flex h-16 w-24 items-center justify-center rounded-lg bg-white p-3 shadow-md transition-all duration-300 hover:-translate-y-1 hover:shadow-lg sm:h-20 sm:w-28 md:h-24 md:w-32">
-                  <Image
-                    src="/naseel.png"
-                    alt=""
-                    width={128}
-                    height={96}
-                    className="h-full w-full object-contain"
-                    loading="lazy"
-                    sizes="(max-width: 640px) 96px, (max-width: 768px) 112px, 128px"
-                  />
-                </div>
-                <div className="flex h-16 w-24 items-center justify-center rounded-lg bg-white p-3 shadow-md transition-all duration-300 hover:-translate-y-1 hover:shadow-lg sm:h-20 sm:w-28 md:h-24 md:w-32">
-                  <Image
-                    src="/geometric-logo.png"
-                    alt=""
-                    width={128}
-                    height={96}
-                    className="h-full w-full object-contain"
-                    loading="lazy"
-                    sizes="(max-width: 640px) 96px, (max-width: 768px) 112px, 128px"
-                  />
-                </div>
-                <div className="flex h-16 w-24 items-center justify-center rounded-lg bg-white p-3 shadow-md transition-all duration-300 hover:-translate-y-1 hover:shadow-lg sm:h-20 sm:w-28 md:h-24 md:w-32">
-                  <Image
-                    src="/desar.png"
-                    alt=""
-                    width={128}
-                    height={96}
-                    className="h-full w-full object-contain"
-                    loading="lazy"
-                    sizes="(max-width: 640px) 96px, (max-width: 768px) 112px, 128px"
-                  />
-                </div>
-                <div className="flex h-16 w-24 items-center justify-center rounded-lg bg-white p-3 shadow-md transition-all duration-300 hover:-translate-y-1 hover:shadow-lg sm:h-20 sm:w-28 md:h-24 md:w-32">
-                  <Image
-                    src="/tmoor.png"
-                    alt=""
-                    width={128}
-                    height={96}
-                    className="h-full w-full object-contain"
-                    loading="lazy"
-                    sizes="(max-width: 640px) 96px, (max-width: 768px) 112px, 128px"
-                  />
-                </div>
-                <div className="flex h-16 w-24 items-center justify-center rounded-lg bg-white p-3 shadow-md transition-all duration-300 hover:-translate-y-1 hover:shadow-lg sm:h-20 sm:w-28 md:h-24 md:w-32">
-                  <Image
-                    src="/hair-stars.png"
-                    alt=""
-                    width={128}
-                    height={96}
-                    className="h-full w-full object-contain"
-                    loading="lazy"
-                    sizes="(max-width: 640px) 96px, (max-width: 768px) 112px, 128px"
-                  />
-                </div>
-                <div className="flex h-16 w-24 items-center justify-center rounded-lg bg-white p-3 shadow-md transition-all duration-300 hover:-translate-y-1 hover:shadow-lg sm:h-20 sm:w-28 md:h-24 md:w-32">
-                  <Image
-                    src="/naass-menswear.png"
-                    alt=""
-                    width={128}
-                    height={96}
-                    className="h-full w-full object-contain"
-                    loading="lazy"
-                    sizes="(max-width: 640px) 96px, (max-width: 768px) 112px, 128px"
-                  />
-                </div>
-                <div className="flex h-16 w-24 items-center justify-center rounded-lg bg-white p-3 shadow-md transition-all duration-300 hover:-translate-y-1 hover:shadow-lg sm:h-20 sm:w-28 md:h-24 md:w-32">
-                  <Image
-                    src="/flip.png"
-                    alt=""
-                    width={128}
-                    height={96}
-                    className="h-full w-full object-contain"
-                    loading="lazy"
-                    sizes="(max-width: 640px) 96px, (max-width: 768px) 112px, 128px"
-                  />
-                </div>
-                <div className="flex h-16 w-24 items-center justify-center rounded-lg bg-white p-3 shadow-md transition-all duration-300 hover:-translate-y-1 hover:shadow-lg sm:h-20 sm:w-28 md:h-24 md:w-32">
-                  <Image
-                    src="/amazon-logo.png"
-                    alt=""
-                    width={128}
-                    height={96}
-                    className="h-full w-full object-contain"
-                    loading="lazy"
-                    sizes="(max-width: 640px) 96px, (max-width: 768px) 112px, 128px"
-                  />
-                </div>
-                <div className="flex h-16 w-24 items-center justify-center rounded-lg bg-white p-3 shadow-md transition-all duration-300 hover:-translate-y-1 hover:shadow-lg sm:h-20 sm:w-28 md:h-24 md:w-32">
-                  <Image
-                    src="/google-logo.png"
-                    alt=""
-                    width={128}
-                    height={96}
-                    className="h-full w-full object-contain"
-                    loading="lazy"
-                    sizes="(max-width: 640px) 96px, (max-width: 768px) 112px, 128px"
-                  />
-                </div>
+                {[
+                  { src: "/kdc-kingdom-dates.png", alt: "" },
+                  { src: "/reeq-alnahl.png", alt: "" },
+                  { src: "/naseel.png", alt: "" },
+                  { src: "/geometric-logo.png", alt: "" },
+                  { src: "/desar.png", alt: "" },
+                  { src: "/tmoor.png", alt: "" },
+                  { src: "/hair-stars.png", alt: "" },
+                  { src: "/naass-menswear.png", alt: "" },
+                  { src: "/flip.png", alt: "" },
+                  { src: "/amazon-logo.png", alt: "" },
+                  { src: "/google-logo.png", alt: "" },
+                ].map((logo, index) => (
+                  <div
+                    key={index}
+                    className="flex h-16 w-24 items-center justify-center rounded-lg bg-white p-3 shadow-md transition-all duration-300 hover:-translate-y-1 hover:shadow-lg sm:h-20 sm:w-28 md:h-24 md:w-32"
+                  >
+                    <Image
+                      src={logo.src || "/placeholder.svg"}
+                      alt={logo.alt}
+                      width={128}
+                      height={96}
+                      className="h-full w-full object-contain"
+                      loading="lazy"
+                      sizes="(max-width: 640px) 96px, (max-width: 768px) 112px, 128px"
+                    />
+                  </div>
+                ))}
               </div>
             </AutoScrollContainer>
           </div>

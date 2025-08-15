@@ -1,3 +1,5 @@
+"use client"
+
 import InternalPage from "@/components/internal-page"
 import { CreditCard, ReceiptText, ShieldCheck } from "lucide-react"
 

@@ -18,7 +18,6 @@ const iconItem = {
     opacity: 1,
     y: 0,
     scale: 1,
-    transition: { duration: 0.55, ease: [0.22, 1, 0.36, 1] },
   },
 }
 
@@ -90,7 +89,7 @@ export default function LaunchCompact() {
         initial={{ opacity: 0, y: 10 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, amount: 0.5 }}
-        transition={{ duration: 0.45, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
+        transition={{ duration: 0.45, delay: 0.15, ease: "easeOut" }}
         className="relative mx-auto mt-6 md:mt-8 w-full max-w-5xl"
       >
         {/* Outer glow + frame */}

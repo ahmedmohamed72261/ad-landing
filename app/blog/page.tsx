@@ -3,67 +3,140 @@
 import { useState, useEffect } from "react"
 import { SharedHeader } from "@/components/shared-header"
 import { SharedFooter } from "@/components/shared-footer"
-import { Search, Calendar, Clock, ArrowLeft, Tag, Filter } from "lucide-react"
+import { Search, Calendar, Clock, ArrowLeft, Tag } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
-import { getBlogs, getBlogCategories, type BlogPost } from "@/lib/blog-service"
+import { getBlogs, type BlogPost, type BlogResponse } from "@/lib/blog-service"
 
 // Fallback blog posts in case API fails
 const fallbackBlogPosts = [
- 
+  {
+    id: 1,
+    title: "كيف تحقق عائد استثمار 300% من حملاتك الإعلانية",
+    excerpt: "اكتشف الاستراتيجيات المتقدمة لتحسين ROAS وزيادة أرباحك من الإعلانات الرقمية مع منصة انطلاقة.",
+    image: "/blog-roas-success.png",
+    date: "2025-01-15",
+    readTime: "5 دقائق",
+    category: "تحسين الأداء",
+    featured: true,
+    slug: "roas-optimization-guide",
+  },
 ]
 
-const categories = [
-  
+// Default categories if API fails
+const defaultCategories = [
+  "الكل",
+  "تحسين الأداء"
 ]
 
 export default function BlogPage() {
   const [searchTerm, setSearchTerm] = useState("")
   const [selectedCategory, setSelectedCategory] = useState("الكل")
-  const [blogPosts, setBlogPosts] = useState<BlogPost[]>(fallbackBlogPosts as unknown as BlogPost[])
-  const [blogCategories, setBlogCategories] = useState<string[]>(categories)
+  const [blogPosts, setBlogPosts] = useState(fallbackBlogPosts)
   const [isLoading, setIsLoading] = useState(true)
-
-  // Fetch blogs and categories
+  const [isUsingFallback, setIsUsingFallback] = useState(false)
+  const [categories, setCategories] = useState(defaultCategories)
+  
+  // Fetch blogs from API
   useEffect(() => {
-    const fetchData = async () => {
-      setIsLoading(true)
+    async function fetchBlogs() {
       try {
-        const response = await getBlogs(selectedCategory === "الكل" ? "" : selectedCategory)
-        setBlogPosts(response.blogs)
+        setIsLoading(true)
+        // If selectedCategory is not "الكل", use it for filtering
+        // For API categories with objects, we need to filter by slug if available
+        let categoryParam;
+        if (selectedCategory !== "الكل") {
+          // Try to find if we have a category with this name and get its slug
+          const categoryObj = blogPosts.find(post => 
+            post.category === selectedCategory
+          );
+          categoryParam = selectedCategory;
+        }
         
-        // Fetch categories if needed
-        const categoryList = await getBlogCategories()
-        if (categoryList.length > 0) {
-          setBlogCategories(["الكل", ...categoryList])
+        const response = await getBlogs(categoryParam)
+        
+        if (response && response.blogs && response.blogs.length > 0) {
+          // Extract unique categories from API response
+          const apiCategories = ["الكل"];
+          const categoryMap = new Map();
+          
+          // Map API response to match our UI format
+          const formattedPosts = response.blogs.map(blog => {
+            // Extract category information
+            let categoryName, categorySlug;
+            
+            if (typeof blog.category === 'object' && blog.category !== null) {
+              // Handle category as object with name and slug
+              // Use type assertion to avoid TypeScript errors
+              const categoryObj = blog.category as { name: string; slug: string };
+              categoryName = categoryObj.name;
+              categorySlug = categoryObj.slug;
+            } else {
+              // Handle category as string
+              categoryName = blog.category;
+            }
+            
+            // Add to categories list if not already there
+            if (categoryName && !categoryMap.has(categoryName)) {
+              categoryMap.set(categoryName, true);
+              apiCategories.push(categoryName);
+            }
+            
+            return {
+              id: parseInt(blog._id) || 0, // Convert string id to number
+              title: blog.title,
+              excerpt: blog.excerpt || "",
+              image: blog.featuredImage?.url || "/placeholder.svg",
+              date: blog.publishedAt || blog.createdAt || blog.updatedAt,
+              readTime: blog.readTime ? `${blog.readTime} دقائق` : "5 دقائق",
+              category: categoryName,
+              categorySlug: categorySlug,
+              featured: false, // Default to false since featured property doesn't exist in BlogPost type
+              slug: blog.slug
+            };
+          });
+          
+          // Update categories if we got new ones from API
+          if (apiCategories.length > 1) {
+            setCategories(apiCategories);
+          }
+          
+          setBlogPosts(formattedPosts);
+          setIsUsingFallback(false);
+        } else {
+          // Use fallback data if API returns empty
+          setBlogPosts(fallbackBlogPosts);
+          setIsUsingFallback(true);
         }
       } catch (error) {
-        console.error('Error fetching blog data:', error)
-        // Fallback data is already set as initial state
+        console.error("Error fetching blogs:", error);
+        setBlogPosts(fallbackBlogPosts);
+        setIsUsingFallback(true);
       } finally {
-        setIsLoading(false)
+        setIsLoading(false);
       }
     }
-
-    fetchData()
+    
+    fetchBlogs();
   }, [selectedCategory])
 
   const filteredPosts = blogPosts.filter((post) => {
-    if (!post) return false;
-    
-    const matchesSearch = searchTerm ? (
+    const matchesSearch =
       post.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
       post.excerpt.toLowerCase().includes(searchTerm.toLowerCase())
-    ) : true;
     
-    const matchesCategory = selectedCategory === "الكل" || post.category === selectedCategory;
-    return matchesSearch && matchesCategory;
+    // Handle category matching for both string and object categories
+    const matchesCategory = 
+      selectedCategory === "الكل" || 
+      post.category === selectedCategory ||
+      (typeof post.category === 'object' && post.category !== null && 
+        (post.category as { name?: string }).name === selectedCategory)
+    
+    return matchesSearch && matchesCategory
   })
 
-  // Use the first post as featured if available, otherwise null
-  const featuredPost = filteredPosts.length > 0 ? filteredPosts[0] : null
-  // All other posts are regular posts
-  const regularPosts = filteredPosts.length > 1 ? filteredPosts.slice(1) : []
+  const featuredPost = blogPosts.find((post) => post.featured)
+  const regularPosts = filteredPosts.filter((post) => !post.featured)
 
   return (
     <div className="min-h-screen bg-black text-white" dir="rtl">
@@ -79,6 +152,9 @@ export default function BlogPage() {
             <p className="text-xl text-gray-300 max-w-3xl mx-auto leading-relaxed">
               اكتشف أحدث الاتجاهات والاستراتيجيات في عالم الإعلانات الرقمية والتسويق الإلكتروني
             </p>
+            {isUsingFallback && (
+              <p className="text-amber-400 mt-2">نعرض حالياً محتوى احتياطي بسبب مشكلة في الاتصال بالخادم</p>
+            )}
           </div>
 
           {/* Search and Filter */}
@@ -93,21 +169,20 @@ export default function BlogPage() {
                 className="w-full bg-gray-900 border border-gray-700 rounded-xl px-12 py-4 text-white placeholder-gray-400 focus:outline-none focus:border-teal-400 transition-colors"
               />
             </div>
-            <div className="relative min-w-[200px]">
-              <div className="flex items-center gap-2 bg-gray-900 border border-gray-700 rounded-xl py-4 px-6 text-white">
-                <Filter className="w-5 h-5 text-teal-400" />
-                <select 
-                  className="bg-transparent w-full focus:outline-none"
-                  value={selectedCategory}
-                  onChange={(e) => setSelectedCategory(e.target.value)}
+            <div className="flex gap-2 overflow-x-auto">
+              {categories.map((category) => (
+                <button
+                  key={category}
+                  onClick={() => setSelectedCategory(category)}
+                  className={`px-6 py-3 rounded-xl whitespace-nowrap transition-all ${
+                    selectedCategory === category
+                      ? "bg-teal-400 text-black font-semibold"
+                      : "bg-gray-800 text-gray-300 hover:bg-gray-700"
+                  }`}
                 >
-                  {blogCategories.map((category, index) => (
-                    <option key={index} value={category} className="bg-gray-900 text-white">
-                      {category}
-                    </option>
-                  ))}
-                </select>
-              </div>
+                  {category}
+                </button>
+              ))}
             </div>
           </div>
         </div>
@@ -123,7 +198,7 @@ export default function BlogPage() {
                 <div className="md:w-1/2">
                   <div className="relative h-64 md:h-full">
                     <Image
-                      src={featuredPost.featuredImage?.url || "/placeholder.svg"}
+                      src={featuredPost.image || "/placeholder.svg"}
                       alt={featuredPost.title}
                       fill
                       className="object-cover group-hover:scale-105 transition-transform duration-300"
@@ -137,11 +212,11 @@ export default function BlogPage() {
                   <div className="flex items-center gap-4 mb-4 text-sm text-gray-400">
                     <div className="flex items-center gap-2">
                       <Calendar className="w-4 h-4" />
-                      <span>{new Date(featuredPost.publishedAt || featuredPost.createdAt).toLocaleDateString("ar-SA")}</span>
+                      <span>{new Date(featuredPost.date).toLocaleDateString("ar-SA")}</span>
                     </div>
                     <div className="flex items-center gap-2">
                       <Clock className="w-4 h-4" />
-                      <span>{featuredPost.readTime} دقائق</span>
+                      <span>{featuredPost.readTime}</span>
                     </div>
                     <div className="flex items-center gap-2">
                       <Tag className="w-4 h-4" />
@@ -172,55 +247,61 @@ export default function BlogPage() {
           <h2 className="text-2xl font-bold mb-8">
             {searchTerm ? `نتائج البحث (${filteredPosts.length})` : "أحدث المقالات"}
           </h2>
-
-          {filteredPosts.length === 0 ? (
+          
+          {isLoading ? (
             <div className="text-center py-16">
-              <p className="text-gray-400 text-lg">لم يتم العثور على مقالات تطابق بحثك</p>
+              <p className="text-gray-400 text-lg">جاري تحميل المقالات...</p>
             </div>
           ) : (
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {regularPosts.map((post) => (
-                <article
-                  key={post._id || post.slug}
-                  className="bg-gray-900 rounded-2xl overflow-hidden hover:shadow-2xl transition-all duration-300 group hover:transform hover:scale-105"
-                >
-                  <div className="relative h-48">
-                    <Image
-                      src={post.featuredImage?.url || "/placeholder.svg"}
-                      alt={post.title}
-                      fill
-                      className="object-cover group-hover:scale-110 transition-transform duration-300"
-                    />
-                    <div className="absolute top-4 right-4">
-                      <span className="bg-black/70 text-white px-3 py-1 rounded-full text-sm">{post.category}</span>
-                    </div>
-                  </div>
-                  <div className="p-6">
-                    <div className="flex items-center gap-4 mb-3 text-sm text-gray-400">
-                      <div className="flex items-center gap-1">
-                        <Calendar className="w-4 h-4" />
-                        <span>{new Date(post.date).toLocaleDateString("ar-SA")}</span>
-                      </div>
-                      <div className="flex items-center gap-1">
-                        <Clock className="w-4 h-4" />
-                        <span>{post.readTime}</span>
+            filteredPosts.length === 0 ? (
+              <div className="text-center py-16">
+                <p className="text-gray-400 text-lg">لم يتم العثور على مقالات تطابق بحثك</p>
+              </div>
+            ) : (
+              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {regularPosts.map((post) => (
+                  <article
+                    key={post.id}
+                    className="bg-gray-900 rounded-2xl overflow-hidden hover:shadow-2xl transition-all duration-300 group hover:transform hover:scale-105"
+                  >
+                    <div className="relative h-48">
+                      <Image
+                        src={post.image || "/placeholder.svg"}
+                        alt={post.title}
+                        fill
+                        className="object-cover group-hover:scale-110 transition-transform duration-300"
+                      />
+                      <div className="absolute top-4 right-4">
+                        <span className="bg-black/70 text-white px-3 py-1 rounded-full text-sm">{post.category}</span>
                       </div>
                     </div>
-                    <h3 className="text-xl font-bold mb-3 group-hover:text-teal-400 transition-colors line-clamp-2">
-                      {post.title}
-                    </h3>
-                    <p className="text-gray-300 mb-4 leading-relaxed line-clamp-3">{post.excerpt}</p>
-                    <a
-                      href={`/blog/${post.slug}`}
-                      className="text-teal-400 font-semibold hover:text-teal-300 transition-colors flex items-center gap-2"
-                    >
-                      اقرأ المزيد
-                      <ArrowLeft className="w-4 h-4" />
-                    </a>
-                  </div>
-                </article>
-              ))}
-            </div>
+                    <div className="p-6">
+                      <div className="flex items-center gap-4 mb-3 text-sm text-gray-400">
+                        <div className="flex items-center gap-1">
+                          <Calendar className="w-4 h-4" />
+                          <span>{new Date(post.date).toLocaleDateString("ar-SA")}</span>
+                        </div>
+                        <div className="flex items-center gap-1">
+                          <Clock className="w-4 h-4" />
+                          <span>{post.readTime}</span>
+                        </div>
+                      </div>
+                      <h3 className="text-xl font-bold mb-3 group-hover:text-teal-400 transition-colors line-clamp-2">
+                        {post.title}
+                      </h3>
+                      <p className="text-gray-300 mb-4 leading-relaxed line-clamp-3">{post.excerpt}</p>
+                      <a
+                        href={`/blog/${post.slug}`}
+                        className="text-teal-400 font-semibold hover:text-teal-300 transition-colors flex items-center gap-2"
+                      >
+                        اقرأ المزيد
+                        <ArrowLeft className="w-4 h-4" />
+                      </a>
+                    </div>
+                  </article>
+                ))}
+              </div>
+            )
           )}
         </div>
       </section>

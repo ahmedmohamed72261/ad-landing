@@ -1,3 +1,4 @@
+"use client"
 import InternalPage from "@/components/internal-page"
 import { HelpCircle, Search, PlugZap, Gauge, Shield } from "lucide-react"
 

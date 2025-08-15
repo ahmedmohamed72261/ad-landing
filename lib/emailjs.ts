@@ -10,7 +10,7 @@ export const EMAILJS_CONFIG = {
 }
 
 // Initialize EmailJS
-if (EMAILJS_CONFIG.PUBLIC_KEY) {
+if (typeof window !== 'undefined' && EMAILJS_CONFIG.PUBLIC_KEY) {
   emailjs.init(EMAILJS_CONFIG.PUBLIC_KEY)
 }
 
@@ -24,29 +24,37 @@ export interface EmailData {
   message: string
 }
 
+// Direct EmailJS implementation for sending emails
 export const sendEmail = async (data: EmailData): Promise<boolean> => {
   try {
+    // Check if EmailJS configuration is complete
     if (!EMAILJS_CONFIG.SERVICE_ID || !EMAILJS_CONFIG.TEMPLATE_ID || !EMAILJS_CONFIG.PUBLIC_KEY) {
-      console.error("EmailJS configuration is incomplete. Please check your environment variables.")
+      console.error("EmailJS configuration is incomplete")
       return false
     }
 
+    // Prepare template parameters
     const templateParams = {
       from_name: data.name,
       from_email: data.email,
       phone: data.phone || "غير محدد",
       company: data.company || "غير محدد",
       subject: data.subject || data.topic || "رسالة جديدة",
-      message: data.message,
-      reply_to: data.email,
-      to_email: "samehawed9@gmail.com",
+      message: data.message
     }
 
-    const response = await emailjs.send(EMAILJS_CONFIG.SERVICE_ID, EMAILJS_CONFIG.TEMPLATE_ID, templateParams)
+    // Send email using EmailJS
+    const response = await emailjs.send(
+      EMAILJS_CONFIG.SERVICE_ID,
+      EMAILJS_CONFIG.TEMPLATE_ID,
+      templateParams,
+      EMAILJS_CONFIG.PUBLIC_KEY
+    )
 
-    return response.status === 200
+    console.log("Email sent successfully:", response)
+    return true
   } catch (error) {
-    console.error("EmailJS Error:", error)
+    console.error("Email sending error:", error)
     return false
   }
 }

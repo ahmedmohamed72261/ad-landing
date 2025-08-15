@@ -10,7 +10,7 @@ export default function FooterBadges() {
         <div className="flex items-center justify-between rounded-2xl border border-black/10 bg-white/95 p-4 text-gray-800 shadow-md">
           <span className="text-sm font-medium text-sky-700">شريك جوجل</span>
           <Image
-            src="/google-partner-logo.png"
+            src="/google-logo.png"
             alt="Google Partner"
             width={80}
             height={32}
@@ -46,13 +46,12 @@ export default function FooterBadges() {
             aria-label="وزارة التجارة"
             title="وزارة التجارة"
           >
-            <Image
-              src="/images/moc-logo.png"
-              width={80}
-              height={32}
+            <img
+              src="https://darbpay.com/wp-content/uploads/2025/01/Logo_Ministry_of_Commerce.svg_.png"
               alt="شعار وزارة التجارة"
-                height="40"
-                className="block h-10 w-10 rounded-sm object-contain"
+              width="40"
+              height="40"
+              className="block h-10 w-10 rounded-sm object-contain"
             />
           </a>
         </div>

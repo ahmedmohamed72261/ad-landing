@@ -1,3 +1,5 @@
+"use client"
+
 import InternalPage from "@/components/internal-page"
 import { Layers3, Gift, Medal } from "lucide-react"
 

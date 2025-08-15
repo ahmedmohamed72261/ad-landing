@@ -19,6 +19,7 @@ interface Section {
   paragraphs?: string[]
   bullets?: string[]
   custom?: React.ReactNode
+  icon?: React.ComponentType
 }
 
 interface FAQ {
@@ -39,8 +40,8 @@ interface InternalPageProps {
   sections: Section[]
   faq?: FAQ[]
   cta?: CTA
-  heroIcon?: React.ReactNode
-  highlights?: string[]
+  heroIcon?: React.ComponentType<any>
+  highlights?: Array<{ label: string; value: string }>
   policyList?: string[]
 }
 
@@ -52,6 +53,8 @@ export default function InternalPage({
   sections,
   faq,
   cta,
+  heroIcon,
+  highlights,
 }: InternalPageProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null)

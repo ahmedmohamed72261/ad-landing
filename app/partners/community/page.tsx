@@ -1,3 +1,5 @@
+"use client"
+
 import InternalPage from "@/components/internal-page"
 import { Users, CalendarCheck, BookOpen } from "lucide-react"
 

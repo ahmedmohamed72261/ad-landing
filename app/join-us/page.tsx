@@ -1,3 +1,5 @@
+"use client"
+
 import InternalPage from "@/components/internal-page"
 import { Briefcase, UserCheck, Rocket, GraduationCap, Crown, ClipboardCheck } from "lucide-react"
 

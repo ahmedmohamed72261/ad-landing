@@ -1,3 +1,5 @@
+"use client"
+
 import InternalPage from "@/components/internal-page"
 import { Monitor, Rocket, Gauge } from "lucide-react"
 

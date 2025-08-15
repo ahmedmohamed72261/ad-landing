@@ -1,3 +1,5 @@
+"use client"
+
 import InternalPage from "@/components/internal-page"
 import { Link2, Coins, BarChart3 } from "lucide-react"
 

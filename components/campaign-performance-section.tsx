@@ -101,7 +101,7 @@ export default function CampaignPerformanceSection() {
       <div className="relative z-10 container mx-auto grid items-center gap-10 px-4 lg:grid-cols-2">
         {/* Right: fixed-size animated rectangle (522 x 280) */}
         <div className="order-2 lg:order-2 lg:justify-self-start">
-          <div className="relative mx-auto w-[522px] max-w-full">
+          <div className="relative mx-auto w-full max-w-[522px]">
             <div className="relative h-[280px] w-full overflow-hidden rounded-2xl border border-white/10 bg-[#0f1216] p-4 shadow-[0_8px_30px_rgba(0,0,0,0.35)] backdrop-blur">
               {/* Title row inside the card */}
               <div className="mb-3 flex items-center justify-between">

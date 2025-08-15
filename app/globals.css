@@ -2,7 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Optimized CSS with responsive improvements */
+/* Optimized CSS by removing unused variables and keeping only essential styles */
 @layer base {
   :root {
     --background: 0 0% 100%;
@@ -90,30 +90,4 @@
 
 .testimonials-scroll:hover {
   animation-play-state: paused;
-}
-
-/* Responsive utilities */
-@layer utilities {
-  .text-balance {
-    text-wrap: balance;
-  }
-  
-  .text-pretty {
-    text-wrap: pretty;
-  }
-  
-  /* Improved touch targets for mobile */
-  .touch-target {
-    @apply p-2 min-h-[44px] min-w-[44px];
-  }
-  
-  /* Responsive container padding */
-  .container-responsive {
-    @apply px-4 md:px-6 lg:px-8;
-  }
-  
-  /* Responsive section spacing */
-  .section-spacing {
-    @apply py-8 md:py-12 lg:py-16;
-  }
 }

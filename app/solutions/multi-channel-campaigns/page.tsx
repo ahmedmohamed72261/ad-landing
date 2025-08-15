@@ -1,3 +1,5 @@
+"use client"
+
 import InternalPage from "@/components/internal-page"
 import { LayoutGrid, BarChart3, Rocket, Palette, Puzzle, Gauge } from "lucide-react"
 
