@@ -60,7 +60,7 @@ export default function LandingPage() {
 
             {/* Title */}
             <h1 className="mb-8 text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-bold leading-tight text-white">
-              <span className="bg-gradient-to-r block leading-normal mb-[-100px] from-white via-gray-100 to-gray-300 bg-clip-text text-transparent">
+              <span className="bg-gradient-to-r from-white via-gray-100 to-gray-300 bg-clip-text text-transparent">
                 أطلق حملتك
               </span>
               <br />

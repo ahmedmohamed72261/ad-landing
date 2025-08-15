@@ -29,7 +29,7 @@ export function LoadingOverlay() {
       <div className="relative flex flex-col items-center">
         {/* Logo container with glow effect */}
         <div className="mb-8 relative">
-          <div className="w-24 h-24 relative">
+          <div className="w-16 h-16 relative">
             <div className="absolute inset-0 bg-white/20 rounded-full animate-pulse"></div>
             <img 
               src="/antalaqa-icon.png" 
@@ -49,16 +49,6 @@ export function LoadingOverlay() {
             </div>
           </div>
         </div>
-
-        {/* Loading dots */}
-        <div className="flex gap-2 mt-4">
-          {[0, 1, 2].map((i) => (
-            <div
-              key={i}
-              className="w-3 h-3 bg-white rounded-full animate-bounce"
-              style={{ animationDelay: `${i * 0.2}s` }}
-            />
-          ))}
         </div>
       </div>
     </div>
