@@ -4,21 +4,19 @@ import { useEffect, useState } from 'react'
 
 export function LoadingOverlay() {
   const [isVisible, setIsVisible] = useState(true)
-  const [counter, setCounter] = useState(2)  // Start at 2 seconds
   const [progress, setProgress] = useState(0)
 
   useEffect(() => {
     const interval = setInterval(() => {
-      if (counter > 0) {
-        setCounter(counter - 1)
+      if (progress < 100) {
         setProgress((prevProgress) => Math.min(prevProgress + 50, 100)) // Increase progress by 50% per second
       } else {
         setIsVisible(false)
       }
-    }, 1000)  // Decrease counter every second
+    }, 1000)  // Update progress every second
 
     return () => clearInterval(interval)
-  }, [counter])
+  }, [progress])
 
   if (!isVisible) return null
 
@@ -36,18 +34,18 @@ export function LoadingOverlay() {
             <img 
               src="/antalaqa-icon.png" 
               alt="Antalaqa Logo"
-              className="w-full h-full object-contain relative z-10"
+              className="w-full h-full rounded-full object-contain relative z-10"
             />
           </div>
           {/* Circular spinner around logo */}
           <div className="absolute inset-[-8px] rounded-full border-4 border-white/20 border-t-white animate-spin"></div>
         </div>
-        
-        {/* Loading text with fade animation */}
+
+        {/* Loading text without counter */}
         <div className="text-white text-xl font-bold relative mb-4">
           <div className="overflow-hidden">
             <div className="animate-slide-up">
-              جاري التحميل... {counter}
+              جاري التحميل...
             </div>
           </div>
         </div>
