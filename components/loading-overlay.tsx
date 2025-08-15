@@ -4,18 +4,20 @@ import { useEffect, useState } from 'react'
 
 export function LoadingOverlay() {
   const [isVisible, setIsVisible] = useState(true)
-  const [counter, setCounter] = useState(2)
+  const [counter, setCounter] = useState(2)  // Start at 2 seconds
+  const [progress, setProgress] = useState(0)
 
   useEffect(() => {
-    const timer = setTimeout(() => {
+    const interval = setInterval(() => {
       if (counter > 0) {
         setCounter(counter - 1)
+        setProgress((prevProgress) => Math.min(prevProgress + 50, 100)) // Increase progress by 50% per second
       } else {
         setIsVisible(false)
       }
     }, 1000)  // Decrease counter every second
 
-    return () => clearTimeout(timer)
+    return () => clearInterval(interval)
   }, [counter])
 
   if (!isVisible) return null
@@ -34,7 +36,7 @@ export function LoadingOverlay() {
             <img 
               src="/antalaqa-icon.png" 
               alt="Antalaqa Logo"
-              className="w-full h-full rounded-full object-contain relative z-10"
+              className="w-full h-full object-contain relative z-10"
             />
           </div>
           {/* Circular spinner around logo */}
@@ -42,13 +44,20 @@ export function LoadingOverlay() {
         </div>
         
         {/* Loading text with fade animation */}
-        <div className="text-white text-xl font-bold relative">
+        <div className="text-white text-xl font-bold relative mb-4">
           <div className="overflow-hidden">
             <div className="animate-slide-up">
               جاري التحميل... {counter}
             </div>
           </div>
         </div>
+
+        {/* Progress bar */}
+        <div className="w-full max-w-xs bg-white/20 rounded-full h-3 mb-4">
+          <div
+            className="h-full bg-teal-500 rounded-full transition-all duration-1000"
+            style={{ width: `${progress}%` }}
+          ></div>
         </div>
       </div>
     </div>
