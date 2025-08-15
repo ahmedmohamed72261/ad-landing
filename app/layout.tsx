@@ -1,6 +1,7 @@
 import type React from "react"
 import type { Metadata, Viewport } from "next"
 import { WhatsAppFloat } from "@/components/whatsapp-float"
+import { LoadingOverlay } from "@/components/loading-overlay"
 import { Toaster } from "react-hot-toast"
 import { GeistSans } from 'geist/font/sans'
 import "./globals.css"
@@ -72,6 +73,7 @@ export default function RootLayout({
         <link rel="manifest" href="/manifest.json" />
       </head>
       <body className="antialiased min-h-screen">
+        <LoadingOverlay />
         {children}
         <WhatsAppFloat />
         <Toaster position="top-center" />

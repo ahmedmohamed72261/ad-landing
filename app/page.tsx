@@ -51,7 +51,7 @@ export default function LandingPage() {
 
           <div className="container relative z-10 mx-auto px-4 sm:px-6 lg:px-8 text-center">
             {/* Badge */}
-            <div className="mb-8 inline-flex items-center gap-2 rounded-full border border-teal-500/30 bg-gradient-to-r from-teal-500/20 to-blue-500/20 px-4 sm:px-6 py-2 backdrop-blur-sm">
+            <div className="mb-16 mt-2 inline-flex items-center gap-2 rounded-full border border-teal-500/30 bg-gradient-to-r from-teal-500/20 to-blue-500/20 px-4 sm:px-6 py-2 backdrop-blur-sm">
               <Zap className="h-4 w-4 sm:h-4 sm:w-4 text-teal-400" />
               <span className="text-sm sm:text-sm font-medium text-teal-300">
                 منصة الإعلانات الذكية الرائدة في المنطقة
@@ -60,7 +60,7 @@ export default function LandingPage() {
 
             {/* Title */}
             <h1 className="mb-8 text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-bold leading-tight text-white">
-              <span className="bg-gradient-to-r from-white via-gray-100 to-gray-300 bg-clip-text text-transparent">
+              <span className="bg-gradient-to-r block leading-normal mb-[-100px] from-white via-gray-100 to-gray-300 bg-clip-text text-transparent">
                 أطلق حملتك
               </span>
               <br />
@@ -70,14 +70,28 @@ export default function LandingPage() {
             </h1>
 
             {/* Subtitle */}
-            <p className="mx-auto mb-12 max-w-2xl lg:max-w-4xl text-lg md:text-xl lg:text-2xl font-light text-gray-300 leading-relaxed">
+            <p className="mx-auto sm:mb-12 max-w-2xl lg:max-w-4xl text-lg md:text-xl lg:text-2xl font-light text-gray-300 leading-relaxed">
               ابدأ مع انطلاقة اليوم - أطلق حملتك الإعلانية،
               <br />
               عرّف العملاء بمتجرك، وزد مبيعاتك
               <br />
               بخطوات سهلة ونتائج مضمونة
             </p>
-
+            {/* Trust indicators */}
+            <AutoScrollContainer className="flex items-center mb-40 my-6 sm:my-10 justify-start gap-6 sm:gap-6 lg:gap-8 text-gray-400 sm:justify-center overflow-x-auto">
+              <div className="flex items-center gap-2 whitespace-nowrap">
+                <CheckCircle2 className="h-5 w-5 sm:h-5 sm:w-5 text-teal-400 flex-shrink-0" />
+                <span className="text-sm sm:text-sm">أكثر من 10,000 متجر نشط</span>
+              </div>
+              <div className="flex items-center gap-2 whitespace-nowrap">
+                <CheckCircle2 className="h-5 w-5 sm:h-5 sm:w-5 text-teal-400 flex-shrink-0" />
+                <span className="text-sm sm:text-sm">40 مليون ريال مبيعات</span>
+              </div>
+              <div className="flex items-center gap-2 whitespace-nowrap">
+                <CheckCircle2 className="h-5 w-5 sm:h-5 sm:w-5 text-teal-400 flex-shrink-0" />
+                <span className="text-sm sm:text-sm">دعم 24/7</span>
+              </div>
+            </AutoScrollContainer>
             {/* CTAs */}
             <div className="flex flex-col items-center justify-center gap-4 sm:flex-row sm:gap-6 mb-16">
               <Button
@@ -95,22 +109,6 @@ export default function LandingPage() {
                 شاهد العرض التوضيحي
               </Button>
             </div>
-
-            {/* Trust indicators */}
-            <AutoScrollContainer className="flex items-center justify-start gap-6 sm:gap-6 lg:gap-8 text-gray-400 sm:justify-center overflow-x-auto">
-              <div className="flex items-center gap-2 whitespace-nowrap">
-                <CheckCircle2 className="h-5 w-5 sm:h-5 sm:w-5 text-teal-400 flex-shrink-0" />
-                <span className="text-sm sm:text-sm">أكثر من 10,000 متجر نشط</span>
-              </div>
-              <div className="flex items-center gap-2 whitespace-nowrap">
-                <CheckCircle2 className="h-5 w-5 sm:h-5 sm:w-5 text-teal-400 flex-shrink-0" />
-                <span className="text-sm sm:text-sm">40 مليون ريال مبيعات</span>
-              </div>
-              <div className="flex items-center gap-2 whitespace-nowrap">
-                <CheckCircle2 className="h-5 w-5 sm:h-5 sm:w-5 text-teal-400 flex-shrink-0" />
-                <span className="text-sm sm:text-sm">دعم 24/7</span>
-              </div>
-            </AutoScrollContainer>
           </div>
 
           {/* Scroll indicator */}
@@ -169,7 +167,7 @@ export default function LandingPage() {
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-black via-gray-950 to-black" />
           </div>
           <div className="container relative z-10 mx-auto px-4">
-            <span className="mb-4 inline-block rounded-full bg-gray-800 px-4 py-1 text-sm text-gray-300">المشكلة</span>
+            <span className="mb-4 inline-block  centre rounded-full bg-gray-800 px-4 py-1 text-sm text-gray-300">المشكلة</span>
             <h2 className="mb-8 text-center text-4xl font-bold md:text-5xl">تحديات تواجه المعلنين</h2>
             <AutoScrollContainer className="mx-auto grid max-w-4xl grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
               <div className="flex flex-col items-center rounded-lg border border-gray-800 bg-gray-900 p-6 text-center shadow-lg">

@@ -11,7 +11,7 @@ function formatSAR(n: number) {
 
 export default function SocialMediaGrowthSection() {
   // Animated metrics
-  const sales = useCountUp({ end: 182500, duration: 1200, delay: 60 })
+  const sales = useCountUp({ end: 4000000, duration: 1200, delay: 60 })
   const orders = useCountUp({ end: 1260, duration: 1100, delay: 120 })
   const roas = useCountUp({ end: 4.3, duration: 1300, delay: 180, decimals: 2 })
 
@@ -96,7 +96,6 @@ export default function SocialMediaGrowthSection() {
                 </div>
               </div>
             </div>
-            <p className="mt-3 text-center text-xs text-gray-500">تصميم مبسّط مناسب للسوشيال — 16:9 وقابل للقص</p>
           </div>
         </div>
       </div>

@@ -2,6 +2,7 @@ import { SharedHeader } from "@/components/shared-header"
 import { SharedFooter } from "@/components/shared-footer"
 
 export default function PrivacyPolicyPage() {
+
   return (
     <div className="min-h-screen bg-black text-white" dir="rtl">
       <SharedHeader currentPage="privacy" />
@@ -153,13 +154,21 @@ export default function PrivacyPolicyPage() {
                 <p className="flex items-center gap-3">
                   <span>📧</span>
                   <span>
-                    <strong className="text-white">البريد الإلكتروني:</strong> privacy@intilaaqah.com
+                    <strong className="text-white">البريد الإلكتروني:</strong> info@itntlqa.com
                   </span>
                 </p>
                 <p className="flex items-center gap-3">
                   <span>📞</span>
                   <span>
-                    <strong className="text-white">الهاتف:</strong> +966-XXX-XXX-XXX
+                    <strong className="text-white">الهاتف:</strong>{' '}
+                    <a
+                      href="https://api.whatsapp.com/send/?phone=966560431575&text=%D9%85%D8%B1%D8%AD%D8%A8%D8%A7%D9%8B%2B%D8%A3%D8%B1%D9%8A%D8%AF%2B%D8%A7%D9%84%D8%A7%D8%B3%D8%AA%D9%81%D8%B3%D8%A7%D8%B1%2B%D8%B9%D9%86%2B%D8%AE%D8%AF%D9%85%D8%A7%D8%AA%2B%D8%A7%D9%86%D8%B7%D9%84%D8%A7%D9%82%D8%A9%2B%D8%A7%D9%84%D8%A5%D8%B9%D9%84%D8%A7%D9%86%D9%8A%D8%A9&type=phone_number&app_absent=0"
+                      className="text-green-400 hover:underline"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      966560431575
+                    </a>
                   </span>
                 </p>
               </div>

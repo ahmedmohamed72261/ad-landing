@@ -30,7 +30,7 @@ export default function GCCSuccessSection() {
           <h2 id="gcc-title" className="mb-4 text-3xl font-extrabold text-white md:text-4xl">
             نجاحنا في السوق الخليجي
           </h2>
-          <p className="mb-6 text-base leading-relaxed text-gray-300">
+          <p className="mb-6 text-base leading-relaxed text-white">
             خلال 3 أشهر حققنا +30% عائد على الاستثمار عبر مواءمة المحتوى المحلي والاستهداف الدقيق.
           </p>
 
